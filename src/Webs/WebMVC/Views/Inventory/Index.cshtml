@@ -1,0 +1,32 @@
+@{
+    ViewData["Title"] = "MaterialsManage";
+}
+@model WebMVC.ViewModels.PaginatedList<WebMVC.ViewModels.PartNumber>
+<div class="text-center">
+    <h1 class="display-4">MaterialsManage</h1>
+    <a asp-action="Create" >新增</a>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col"></th>
+                <th scope="col">料號</th>
+                <th scope="col">名稱</th>
+                <th scope="col">規格</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Items)
+            {
+                <tr scope="row">
+                    <td>
+                        <a asp-action="Details" asp-route-Id="@item.Id">詳細內容</a>
+                        <a asp-action="Edit" asp-route-Id="@item.Id">編輯</a>
+                    </td>
+                    <th>@item.Id</th>
+                    <td>@item.Name</td>
+                    <td>@item.Spec</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,30 @@
+
+@model WebMVC.ViewModels.PartNumber
+<dd class="col-12">
+    <table class="table">
+        <tr>
+            <th>
+                料號
+            </th>
+            <td>
+                @Html.DisplayFor(model => model.Id)
+            </td>
+        </tr>
+        <tr>
+            <th>
+                名稱
+            </th>
+            <td>
+                @Html.DisplayFor(model => model.Name)
+            </td>
+        </tr>
+        <tr>
+            <th>
+                規格
+            </th>
+            <td>
+                @Html.DisplayFor(model => model.Spec)
+            </td>
+        </tr>
+    </table>
+</dd>
