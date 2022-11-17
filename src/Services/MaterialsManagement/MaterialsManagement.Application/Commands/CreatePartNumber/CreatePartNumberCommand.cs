@@ -3,11 +3,11 @@ using MaterialsManagement.Domain.Interfaces;
 using MaterialsManagement.Domain.Entities;
 namespace MaterialsManagement.Application.Commands.CreatePartNumber;
 
-public class CreatePartNumberCommand : IRequest<bool>
+public record CreatePartNumberCommand : IRequest<bool>
 {
-    public string Id{set;get;} = string.Empty;
-    public string Name {set;get;}= string.Empty;
-    public string Spec{set;get;}= string.Empty;
+    public string Id{get;set;} = string.Empty;
+    public string Name{get;set;} = string.Empty;
+    public string Spec{get;set;} = string.Empty;
 }
 
 public class CreatePartNumberCommandHandler : IRequestHandler<CreatePartNumberCommand,bool>

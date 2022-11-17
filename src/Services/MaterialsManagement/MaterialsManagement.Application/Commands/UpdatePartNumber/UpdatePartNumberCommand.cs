@@ -13,11 +13,9 @@ public record UpdatePartNumberCommand : IRequest<bool>
 public class UpdatePartNumberCommandHandler : IRequestHandler<UpdatePartNumberCommand,bool>
 {
     private readonly IPartNumberRepository _context;
-    private readonly IMediator _mediator;
-    public UpdatePartNumberCommandHandler(IPartNumberRepository context,IMediator mediator)
+    public UpdatePartNumberCommandHandler(IPartNumberRepository context)
     {
         _context = context;
-        _mediator = mediator;
     }
 
     public async Task<bool> Handle(UpdatePartNumberCommand request,CancellationToken cancellationToken)
