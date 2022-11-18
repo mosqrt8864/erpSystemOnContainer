@@ -36,4 +36,9 @@ public class PurchaseRequestRepository : IPurchaseRequestRepository
     public async Task SaveChangesAsync(CancellationToken cancellationToken){
         await _context.SaveChangesAsync(cancellationToken);
     }
+    public async Task Delete(PurchaseRequest purchaseRequest,CancellationToken cancellationToken)
+    {
+        _context.Remove(purchaseRequest);
+        await _context.SaveChangesAsync(cancellationToken);
+    }
 }

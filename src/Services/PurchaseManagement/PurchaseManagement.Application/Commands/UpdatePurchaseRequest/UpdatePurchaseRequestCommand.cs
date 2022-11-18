@@ -27,7 +27,7 @@ public class UpdatePurchaseRequestCommandHandler : IRequestHandler<UpdatePurchas
         purchaseRequest.Description = request.Description;
         foreach(var item in request.PurchaseRequestItems)
         {
-            purchaseRequest.UpdatePurchaseRequestItem(purchaseRequest.Id,item.Id,item.PNId,item.Qty);
+            purchaseRequest.UpdatePurchaseRequestItem(purchaseRequest.Id,item.Id,item.PNId,item.Name,item.Spec,item.Qty);
         }
         await _repository.SaveChangesAsync(cancellationToken);
         return true;

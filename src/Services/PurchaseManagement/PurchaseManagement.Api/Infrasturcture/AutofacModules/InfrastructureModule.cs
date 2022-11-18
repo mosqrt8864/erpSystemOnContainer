@@ -14,6 +14,9 @@ public class InfrastructureModule: Autofac.Module
         builder.RegisterType<PurchaseRequestRepository>()
             .As<IPurchaseRequestRepository>()
             .InstancePerLifetimeScope();
+        builder.RegisterType<PurchaseRequestItemRepository>()
+            .As<IPurchaseRequestItemRepository>()
+            .InstancePerLifetimeScope();
         builder
         .RegisterType<PurchaseContext>()
         .WithParameter("options", new DbContextOptionsBuilder<PurchaseContext>()

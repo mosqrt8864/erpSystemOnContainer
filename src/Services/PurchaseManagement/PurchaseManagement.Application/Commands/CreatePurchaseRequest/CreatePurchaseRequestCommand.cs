@@ -30,7 +30,7 @@ public class CreatePurchaseRequestHandler : IRequestHandler<CreatePurchaseReques
         };
         foreach(var item in request.PurchaseRequestItems)
         {
-            purchaseRequest.AddPurchaseRequestItem(request.Id,item.PNId,item.Qty);
+            purchaseRequest.AddPurchaseRequestItem(request.Id,item.PNId,item.Name,item.Spec,item.Qty);
         }
         await _repository.Add(purchaseRequest,cancellationToken);
         return true;

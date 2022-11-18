@@ -18,6 +18,14 @@ class PurchaseRequestItemConfiguration : IEntityTypeConfiguration<PurchaseReques
                     .UsePropertyAccessMode(PropertyAccessMode.Field)
                     .HasColumnName("PNId")
                     .IsRequired();
+        purchaseRequestItemConfiguration.Property<string>("Name")
+                    .UsePropertyAccessMode(PropertyAccessMode.Field)
+                    .HasColumnName("Name")
+                    .IsRequired();
+        purchaseRequestItemConfiguration.Property<string>("Spec")
+                    .UsePropertyAccessMode(PropertyAccessMode.Field)
+                    .HasColumnName("Spec")
+                    .IsRequired();
         purchaseRequestItemConfiguration.Property<int>("Qty")
                     .UsePropertyAccessMode(PropertyAccessMode.Field)
                     .HasColumnName("Qty")

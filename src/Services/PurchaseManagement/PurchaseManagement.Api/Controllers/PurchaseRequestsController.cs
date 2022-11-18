@@ -5,6 +5,7 @@ using PurchaseManagement.Application.Queries.GetPurchaseRequest;
 using PurchaseManagement.Application.Models;
 using PurchaseManagement.Application.Queries.GetPurchaseRequests;
 using PurchaseManagement.Application.Commands.UpdatePurchaseRequest;
+using PurchaseManagement.Application.Commands.DeletePurchaseRequest;
 namespace PurchaseManagement.Api.Controllers;
 
 [ApiController]
@@ -54,5 +55,10 @@ public class PurchaseRequestsController : ControllerBase
                 "----- Sending command: ({@Command})",
                 command);
         return await _mediator.Send(command);
+    }
+    [HttpDelete("{id}")]
+    public async Task<ActionResult<bool>> Delete(string id)
+    {
+        return await _mediator.Send(new DeletePurchaseRequestCommand(){Id = id});
     }
 }
