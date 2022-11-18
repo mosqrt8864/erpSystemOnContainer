@@ -21,6 +21,12 @@ public class InventoryController : Controller
         var partNumbers = await _inventorySrv.GetPartNumbers(1,10);
         return View(partNumbers);
     }
+    [HttpGet]
+    public async Task<IActionResult>GetPNList()
+    {
+        var partNumbers = await _inventorySrv.GetPartNumbers(1,10);
+        return Ok(partNumbers);
+    }
     public async Task<IActionResult> Details(string id)
     {
         if (string.IsNullOrEmpty(id))
@@ -35,6 +41,19 @@ public class InventoryController : Controller
         return View(partNumber);
     }
 
+    public async Task<IActionResult> GetPN(string id)
+    {
+        if (string.IsNullOrEmpty(id))
+        {
+            return NotFound();
+        }
+        var partNumber = await _inventorySrv.GetPartNumber(id);
+        if (partNumber == null)
+        {
+            return NotFound();
+        }
+        return Ok(partNumber);
+    }
     public async Task<IActionResult> Create(PartNumber partNumber)
     {
         if (ModelState.IsValid)

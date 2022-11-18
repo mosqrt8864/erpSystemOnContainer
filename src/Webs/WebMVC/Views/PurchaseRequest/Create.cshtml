@@ -1,0 +1,66 @@
+@model WebMVC.ViewModels.PurchaseRequest.Create.CreatePurchaseRequestViewModel;
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h2>新增</h2>
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "createForm" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <h4>請購單</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Id, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Id, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Id, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <table id="itemTable" class="table">
+            <thead>
+                <tr>
+                    <th>料號</th>
+                    <th>名稱</th>
+                    <th>規格</th>
+                    <th>數量</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.PurchaseRequestItems)
+                {
+                    <tr>
+                        <td>@Html.EditorFor(model => item.PNId, new { htmlAttributes = new { @class = "form-control" } })</td>
+                        <td>@Html.EditorFor(model => item.Name, new { htmlAttributes = new { @class = "form-control" } })</td>
+                        <td>@Html.EditorFor(model => item.Spec, new { htmlAttributes = new { @class = "form-control" } })</td>
+                        <td>@Html.EditorFor(model => item.Qty, new { htmlAttributes = new { @class = "form-control" } })</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <p>
+            <button id="addItem" tpye="button" class="btn btn-primary">+</button>
+        </p>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input id="createBtn" type="button" value="儲存" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>

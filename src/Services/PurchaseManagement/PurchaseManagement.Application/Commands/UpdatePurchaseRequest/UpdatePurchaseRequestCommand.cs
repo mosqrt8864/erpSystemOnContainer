@@ -8,7 +8,7 @@ public record UpdatePurchaseRequestCommand : IRequest<bool>
 {
     public string Id {set;get;}=string.Empty;
     public string Description{set;get;}=string.Empty;
-    public IEnumerable<UpdatePurchaseRequestItemDto>? PurchaseRequestItems{set;get;} 
+    public IEnumerable<UpdatePurchaseRequestItemDto> PurchaseRequestItems{set;get;} = new List<UpdatePurchaseRequestItemDto>();
 }
 
 public class UpdatePurchaseRequestCommandHandler : IRequestHandler<UpdatePurchaseRequestCommand,bool>

@@ -4,7 +4,7 @@ namespace WebMVC.Services;
 
 public class InventoryService : IInventoryService
 {
-    private HttpClient _httpClient;
+    private readonly HttpClient _httpClient;
     private readonly string _remoteServiceBaseUrl;
 
     public InventoryService(HttpClient httpClient)
@@ -64,6 +64,7 @@ public class InventoryService : IInventoryService
         }
         result.PageNumber =partNumbers.RootElement.GetProperty("pageNumber").GetInt32();
         result.TotalPages =partNumbers.RootElement.GetProperty("totalPages").GetInt32();
+        result.TotalCount =partNumbers.RootElement.GetProperty("totalCount").GetInt32();
         result.HasNextPage =partNumbers.RootElement.GetProperty("hasNextPage").GetBoolean();
         result.HasPreviousPage =partNumbers.RootElement.GetProperty("hasPreviousPage").GetBoolean();
         return result;

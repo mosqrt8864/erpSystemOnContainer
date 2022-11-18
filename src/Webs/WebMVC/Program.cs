@@ -4,6 +4,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient<IInventoryService, InventoryService>();
+builder.Services.AddHttpClient<IPurchaseRequestService, PurchaseRequestService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

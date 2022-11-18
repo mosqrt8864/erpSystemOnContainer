@@ -9,7 +9,7 @@ public record CreatePurchaseRequestCommand : IRequest<bool>
 {
     public string Id {set;get;}=string.Empty;
     public string Description{set;get;}=string.Empty;
-    public IEnumerable<PurchaseRequestItemDto>? PurchaseRequestItems{set;get;} 
+    public IEnumerable<PurchaseRequestItemDto> PurchaseRequestItems{set;get;}  = new List<PurchaseRequestItemDto>();
 }
 
 public class CreatePurchaseRequestHandler : IRequestHandler<CreatePurchaseRequestCommand,bool>
