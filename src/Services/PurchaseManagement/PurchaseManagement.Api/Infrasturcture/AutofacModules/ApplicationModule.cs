@@ -18,7 +18,6 @@ public class ApplicationModule: Autofac.Module
                     .WithAllOpenGenericHandlerTypesRegistered()
                     .Build();
         builder.RegisterMediatR(configuration);
-        Console.WriteLine(typeof(MappingProfile).Assembly);
         builder.RegisterAutoMapper(typeof(MappingProfile).Assembly);
     }
 }

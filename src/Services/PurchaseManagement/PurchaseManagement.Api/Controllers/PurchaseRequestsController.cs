@@ -4,6 +4,7 @@ using PurchaseManagement.Application.Commands.CreatePurchaseRequest;
 using PurchaseManagement.Application.Queries.GetPurchaseRequest;
 using PurchaseManagement.Application.Models;
 using PurchaseManagement.Application.Queries.GetPurchaseRequests;
+using PurchaseManagement.Application.Commands.UpdatePurchaseRequest;
 namespace PurchaseManagement.Api.Controllers;
 
 [ApiController]
@@ -44,5 +45,14 @@ public class PurchaseRequestsController : ControllerBase
                 query);
         var result = await _mediator.Send(query);
         return result;
+    }
+    [HttpPatch("{id}")]
+    public async Task<ActionResult<bool>> Update(string id ,[FromBody] UpdatePurchaseRequestCommand command)
+    {
+        command.Id = id;
+        _logger.LogInformation(
+                "----- Sending command: ({@Command})",
+                command);
+        return await _mediator.Send(command);
     }
 }

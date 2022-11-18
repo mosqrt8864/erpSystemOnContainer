@@ -20,8 +20,6 @@ public class GetPurchaseRequestQueryHandler : IRequestHandler<GetPurchaseRequest
     public async Task<PurchaseRequestDto> Handle(GetPurchaseRequestQuery request, CancellationToken cancellationToken)
     {
         var result = await _context.GetAsync(request.Id);
-        Console.WriteLine(result);
-        Console.WriteLine(result.PurchaseRequestItems.Count);
         return _mapper.Map<PurchaseRequestDto>(result);
     }
 }

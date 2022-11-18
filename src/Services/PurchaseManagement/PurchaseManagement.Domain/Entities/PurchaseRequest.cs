@@ -19,4 +19,14 @@ public class PurchaseRequest
         };
         PurchaseRequestItems.Add(item);
     }
+    public void UpdatePurchaseRequestItem(string prId,int Id,string pnId,int qty)
+    {
+        var existed = PurchaseRequestItems.Where(o=>o.Id == Id).SingleOrDefault();
+        if (existed!=null){
+            existed.PNId = pnId;
+            existed.Qty = qty;
+        }else{
+            this.AddPurchaseRequestItem(prId,pnId,qty);
+        }
+    }
 }

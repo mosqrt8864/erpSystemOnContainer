@@ -33,4 +33,7 @@ public class PurchaseRequestRepository : IPurchaseRequestRepository
     {
         return await _context.PurchaseRequests.AsNoTracking().CountAsync();
     }
+    public async Task SaveChangesAsync(CancellationToken cancellationToken){
+        await _context.SaveChangesAsync(cancellationToken);
+    }
 }

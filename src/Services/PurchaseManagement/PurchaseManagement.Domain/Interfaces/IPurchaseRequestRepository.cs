@@ -7,4 +7,5 @@ public interface IPurchaseRequestRepository
     Task<PurchaseRequest> GetAsync(string prId);
     Task<List<PurchaseRequest>> GetListAsync(int pageSize,int pageNumber);
     Task<int> GetCountAsync();
+    Task SaveChangesAsync(CancellationToken cancellationToken);
 }

@@ -23,14 +23,11 @@ public class InventoryController : Controller
     }
     public async Task<IActionResult> Details(string id)
     {
-        Console.WriteLine("Hello");
         if (string.IsNullOrEmpty(id))
         {
             return NotFound();
         }
-        Console.WriteLine(id);
         var partNumber = await _inventorySrv.GetPartNumber(id);
-        Console.WriteLine(partNumber);
         if (partNumber == null)
         {
             return NotFound();
@@ -40,7 +37,6 @@ public class InventoryController : Controller
 
     public async Task<IActionResult> Create(PartNumber partNumber)
     {
-        Console.WriteLine("Create");
         if (ModelState.IsValid)
         {
             await _inventorySrv.AddPartNumber(partNumber);
@@ -65,7 +61,6 @@ public class InventoryController : Controller
     [HttpPost]
     public async Task<ActionResult> Edit(PartNumber partNumber)
     {
-        Console.WriteLine("Edit");
         if (ModelState.IsValid) { 
             await _inventorySrv.UpdatePartNumber(partNumber);
             return RedirectToAction("Index");

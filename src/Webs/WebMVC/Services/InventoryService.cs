@@ -18,7 +18,6 @@ public class InventoryService : IInventoryService
         var uri = _remoteServiceBaseUrl;
         var partNumberContent = new StringContent(JsonSerializer.Serialize(partNumber),System.Text.Encoding.UTF8,"application/json");
         var response = await _httpClient.PostAsync(uri,partNumberContent);
-        Console.WriteLine(response);
         response.EnsureSuccessStatusCode();
         return true;
     }
@@ -26,10 +25,8 @@ public class InventoryService : IInventoryService
     public async Task<bool> UpdatePartNumber(PartNumber partNumber)
     {
         var uri = _remoteServiceBaseUrl + "/"+partNumber.Id.ToString();
-        Console.WriteLine(uri);
         var partNumberContent = new StringContent(JsonSerializer.Serialize(partNumber),System.Text.Encoding.UTF8,"application/json");
         var response = await _httpClient.PatchAsync(uri,partNumberContent);
-         Console.WriteLine(response);
         response.EnsureSuccessStatusCode();
         return true;
     }
@@ -56,8 +53,6 @@ public class InventoryService : IInventoryService
         var result = new PaginatedList<PartNumber>();
         result.Items = new List<PartNumber>();
         var partNumbers = JsonDocument.Parse(responseString);
-        Console.WriteLine(uri);
-        Console.WriteLine(partNumbers.RootElement);
         foreach (JsonElement partNumber  in partNumbers.RootElement.GetProperty("items").EnumerateArray())
         {
             result.Items.Add(new PartNumber()
