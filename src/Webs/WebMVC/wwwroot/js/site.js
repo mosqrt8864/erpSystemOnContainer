@@ -51,7 +51,7 @@ function remove(sel,index){
 $(function(){
     $('#addItem').click(function (){
         $('<tr id="row'+counter+'">'+
-            '<td><button onclick="remove(this,0)" tpye="button" class="btn btn-primary">X</button></td>'+
+            '<td><button onclick="remove(this,0)" tpye="button" class="btn btn-danger">X</button></td>'+
             '<td><select name="item.PN"  onchange="getval(this,'+counter+');" class="form-select" id="PN'+counter+'" type="text" /></td>'+
             '<td><input name="item.Name" type="text" class="form-control text-box single-line" readonly/></td>'+
             '<td><input name="item.Spec" type="text" class="form-control text-box single-line" readonly/></td>'+
