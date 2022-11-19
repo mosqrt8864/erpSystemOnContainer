@@ -13,8 +13,8 @@ public class PurchaseRequestService: IPurchaseRequestService
     public PurchaseRequestService(HttpClient httpClient)
     {
         _httpClient = httpClient;
-        _remoteServiceBaseUrl = "http://localhost:5081/api/v1/purchaserequests";
-        _purchaseRequestItemUrl = "http://localhost:5081/api/v1/purchaserequestitems";
+        _remoteServiceBaseUrl = "http://localhost:5002/api/v1/purchaserequests";
+        _purchaseRequestItemUrl = "http://localhost:5002/api/v1/purchaserequestitems";
     }
 
     public async Task<PaginatedList<PurchaseRequestViewModel>> GetPurchaseRequests(int pageNumber,int pageSize)
@@ -77,6 +77,14 @@ public class PurchaseRequestService: IPurchaseRequestService
     public async Task<bool> DeletePurchaseRquestItem(int id)
     {
         var uri = _purchaseRequestItemUrl + "/" + id.ToString();
+        var response = await _httpClient.DeleteAsync(uri);
+        response.EnsureSuccessStatusCode();
+        return true;
+    }
+
+    public async Task<bool> DeletePurchaseRequest(string id)
+    {
+        var uri = _remoteServiceBaseUrl + "/" + id.ToString();
         var response = await _httpClient.DeleteAsync(uri);
         response.EnsureSuccessStatusCode();
         return true;

@@ -13,4 +13,5 @@ public interface IPurchaseRequestService{
     Task<PaginatedList<PurchaseRequestViewModel>>GetPurchaseRequests(int pageNumber,int pageSize);
     Task<DetailPurchaseRequestViewModel> GetPurchaseRequest(string id);
     Task<bool> DeletePurchaseRquestItem(int id);
+    Task<bool> DeletePurchaseRequest(string id);
 }

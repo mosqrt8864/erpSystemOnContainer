@@ -10,7 +10,7 @@ public class InventoryService : IInventoryService
     public InventoryService(HttpClient httpClient)
     {
         _httpClient = httpClient;
-        _remoteServiceBaseUrl = "http://localhost:5259/api/v1/partnumbers";
+        _remoteServiceBaseUrl = "http://localhost:5001/api/v1/partnumbers";
     }
 
     public async Task<bool> AddPartNumber(PartNumber partNumber)

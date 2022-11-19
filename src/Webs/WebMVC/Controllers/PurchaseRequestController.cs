@@ -93,4 +93,9 @@ public class PurchaseRequestController : Controller
         await _service.DeletePurchaseRquestItem(id);
         return Ok("刪除成功");
     }
+    public async Task<IActionResult> Delete(string id)
+    {
+        await _service.DeletePurchaseRequest(id);
+        return RedirectToAction("Index");
+    }
 }
