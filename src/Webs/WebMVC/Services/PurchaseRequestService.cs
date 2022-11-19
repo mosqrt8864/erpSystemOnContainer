@@ -3,15 +3,18 @@ using WebMVC.ViewModels;
 using System.Text.Json;
 using WebMVC.ViewModels.PurchaseRequest.Create;
 using WebMVC.ViewModels.PurchaseRequest.Detail;
+using WebMVC.ViewModels.PurchaseRequest.Update;
 namespace WebMVC.Services;
 public class PurchaseRequestService: IPurchaseRequestService
 {
     private readonly HttpClient _httpClient;
     private readonly string _remoteServiceBaseUrl;
+    private readonly string _purchaseRequestItemUrl;
     public PurchaseRequestService(HttpClient httpClient)
     {
         _httpClient = httpClient;
         _remoteServiceBaseUrl = "http://localhost:5081/api/v1/purchaserequests";
+        _purchaseRequestItemUrl = "http://localhost:5081/api/v1/purchaserequestitems";
     }
 
     public async Task<PaginatedList<PurchaseRequestViewModel>> GetPurchaseRequests(int pageNumber,int pageSize)
@@ -61,5 +64,21 @@ public class PurchaseRequestService: IPurchaseRequestService
             });
         return string.IsNullOrEmpty(responseString) || json ==null ?
             new DetailPurchaseRequestViewModel() :json;
+    }
+
+    public async Task<bool> UpdatePurchaseRequest(UpdatePurchaseRequestViewModel purchaseRequest)
+    {
+        var uri = _remoteServiceBaseUrl + "/"+purchaseRequest.Id.ToString();
+        var content = new StringContent(JsonSerializer.Serialize(purchaseRequest),System.Text.Encoding.UTF8,"application/json");
+        var response = await _httpClient.PatchAsync(uri,content);
+        response.EnsureSuccessStatusCode();
+        return true;
+    }
+    public async Task<bool> DeletePurchaseRquestItem(int id)
+    {
+        var uri = _purchaseRequestItemUrl + "/" + id.ToString();
+        var response = await _httpClient.DeleteAsync(uri);
+        response.EnsureSuccessStatusCode();
+        return true;
     }
 }

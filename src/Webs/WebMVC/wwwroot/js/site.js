@@ -14,10 +14,10 @@ function getval(sel,index)
                 $(this).find("td > input[type='text']").each (function(i,item) {
                     var propertyname = $(item).attr("name");
                     switch(propertyname){
-                        case "Name":
+                        case "item.Name":
                             $(this).val(result.name);
                             break;
-                        case "Spec":
+                        case "item.Spec":
                             $(this).val(result.spec);
                             break;
                         default:
@@ -32,16 +32,30 @@ function getval(sel,index)
     })
 }
 function remove(sel,index){
+    if (index !=0)
+    {
+        $.ajax({
+            contentType: 'application/json; charset=utf-8',
+            type: 'DELETE',
+            url: '/PurchaseRequest/DeleteItem/'+index,
+            success:function(result){
+                alert(result);
+            },
+            error: function(err){
+                alert('fail');
+            }
+        })
+    }
     $(sel).closest("tr").remove();
 }
 $(function(){
     $('#addItem').click(function (){
         $('<tr id="row'+counter+'">'+
-            '<td><button onclick="remove(this,'+counter+')" tpye="button" class="btn btn-primary">X</button></td>'+
-            '<td><select onchange="getval(this,'+counter+');" class="form-select" id="PN'+counter+'" name="PN" type="text" /></td>'+
-            '<td><input name="Name" type="text" class="form-control text-box single-line" readonly/></td>'+
-            '<td><input name="Spec" type="text" class="form-control text-box single-line" readonly/></td>'+
-            '<td><input name="Qty" type="text" class="form-control text-box single-line"/></td>'+
+            '<td><button onclick="remove(this,0)" tpye="button" class="btn btn-primary">X</button></td>'+
+            '<td><select name="item.PN"  onchange="getval(this,'+counter+');" class="form-select" id="PN'+counter+'" type="text" /></td>'+
+            '<td><input name="item.Name" type="text" class="form-control text-box single-line" readonly/></td>'+
+            '<td><input name="item.Spec" type="text" class="form-control text-box single-line" readonly/></td>'+
+            '<td><input name="item.Qty" type="text" class="form-control text-box single-line"/></td>'+
         '</tr>').appendTo("#itemTable");
         $.ajax({
             contentType: 'application/json; charset=utf-8',
@@ -54,10 +68,10 @@ $(function(){
                             $(this).find("td > input[type='text']").each (function(i,item) {
                                 var propertyname = $(item).attr("name");
                                 switch(propertyname){
-                                    case "Name":
+                                    case "item.Name":
                                         $(this).val(value.name);
                                         break;
-                                    case "Spec":
+                                    case "item.Spec":
                                         $(this).val(value.spec);
                                         break;
                                     default:
@@ -84,23 +98,27 @@ $(function(){
         var des =$('#Description').val();
         var items =[];
         $('#itemTable > tbody  > tr').each(function(index, tr) { 
-            var properties = {PRID:id};
+            var properties = {PRId:id};
             $(this).find("td > input[type='text']").each (function(i,item) {
                 var propertyname = $(item).attr("name");
                 switch(propertyname){
-                    case "Name":
+                    case "item.Name":
                         properties.Name = $(item).val();
-                    case "Spec":
+                        break;
+                    case "item.Spec":
                         properties.Spec = $(item).val();
-                    case "Qty":
+                        break;
+                    case "item.Qty":
                         properties.Qty = $(item).val();
+                        break;
                 }
               });
             $(this).find("td > select[type='text']").each (function(i,item) {
                 var propertyname = $(item).attr("name");
                 switch(propertyname){
-                    case "PN":
+                    case "item.PN":
                         properties.PNId = $(item).val();
+                        break;
                 }
             });
               items.push(properties);     
@@ -118,6 +136,96 @@ $(function(){
             success:function(result){
                 alert("新增成功");
                 window.location.href = ".";
+            },
+            error: function(err){
+                alert(err.responseText);
+            }
+        })
+    });
+    $('select[name="selector"]').change(function(){
+        var select = $(this);
+        var id = this.value;
+        $.ajax({
+            contentType: 'application/json; charset=utf-8',
+            type: 'GET',
+            url: '/Inventory/GetPN?id='+id,
+            success:function(result){
+                select.closest('tr').each(function(index, tr) { 
+                    $(this).find("td > input[type='text']").each (function(i,item) {
+                        var propertyname = $(item).attr("name");
+                        switch(propertyname){
+                            case "item.Name":
+                                $(this).val(result.name);
+                                break;
+                            case "item.Spec":
+                                $(this).val(result.spec);
+                                break;
+                            default:
+                                break;
+                        }
+                    });
+                });
+            },
+            error: function(){
+                alert('fail');
+            }
+        })
+    });
+    $('#updateBtn').click(function(){
+        var id = $('#Id').val();
+        var des =$('#Description').val();
+        var items =[];
+        $('#itemTable > tbody  > tr').each(function(index, tr) { 
+            var properties = {PRId:id};
+            $(this).find("td > input[type='hidden']").each (function(i,item) {
+                var propertyname = $(item).attr("name");
+                switch(propertyname){
+                    case "item.Id":
+                        properties.Id = $(item).val();
+                        break;
+                    case "item.PRId":
+                        properties.PRId = $(item).val();
+                        break;
+                }
+              });
+            $(this).find("td > input[type='text']").each (function(i,item) {
+                var propertyname = $(item).attr("name");
+                switch(propertyname){
+                    case "item.Name":
+                        properties.Name = $(item).val();
+                        break;
+                    case "item.Spec":
+                        properties.Spec = $(item).val();
+                        break;
+                    case "item.Qty":
+                        properties.Qty = $(item).val();
+                        break;
+                }
+              });
+            $(this).find("td > select[type='text']").each (function(i,item) {
+                var propertyname = $(item).attr("name");
+                switch(propertyname){
+                    case "item.PN":
+                        properties.PNId = $(item).val();
+                        break;
+                }
+            });
+              items.push(properties);     
+         });
+        var purchaseRequest ={
+            Id :id,
+            Description:des,
+            PurchaseRequestItems:items
+        };
+        console.log(purchaseRequest);
+        $.ajax({
+            contentType: 'application/json; charset=utf-8',
+            type: 'POST',
+            url: '/PurchaseRequest/Update',
+            data :JSON.stringify(purchaseRequest),
+            success:function(result){
+                alert("修改成功");
+                location.reload();
             },
             error: function(err){
                 alert(err.responseText);

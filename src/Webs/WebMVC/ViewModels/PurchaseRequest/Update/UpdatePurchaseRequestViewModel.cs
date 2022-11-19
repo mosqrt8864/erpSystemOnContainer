@@ -1,17 +1,16 @@
-namespace WebMVC.ViewModels.PurchaseRequest.Detail;
-public class DetailPurchaseRequestViewModel{
-    public DetailPurchaseRequestViewModel()
+namespace WebMVC.ViewModels.PurchaseRequest.Update;
+public class UpdatePurchaseRequestViewModel{
+    public UpdatePurchaseRequestViewModel()
     {
-        PurchaseRequestItems = new List<DetailPurchaseRequestItemViewModel>();
+        PurchaseRequestItems = new List<UpdatePurchaseRequestItemViewModel>();
     }
     public string Id{set;get;} = string.Empty;
     public string Description{set;get;} = string.Empty;
-
     public DateTime CreateAt{set;get;}
-    public List<DetailPurchaseRequestItemViewModel> PurchaseRequestItems{set;get;}
+    public List<UpdatePurchaseRequestItemViewModel> PurchaseRequestItems{set;get;}
 }
 
-public class DetailPurchaseRequestItemViewModel
+public class UpdatePurchaseRequestItemViewModel
 {
     public int Id {set;get;} = 0;
     public string PRId {set;get;} = string.Empty;
