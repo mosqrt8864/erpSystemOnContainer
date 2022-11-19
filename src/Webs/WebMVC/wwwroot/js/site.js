@@ -31,9 +31,13 @@ function getval(sel,index)
         }
     })
 }
+function remove(sel,index){
+    $(sel).closest("tr").remove();
+}
 $(function(){
     $('#addItem').click(function (){
         $('<tr id="row'+counter+'">'+
+            '<td><button onclick="remove(this,'+counter+')" tpye="button" class="btn btn-primary">X</button></td>'+
             '<td><select onchange="getval(this,'+counter+');" class="form-select" id="PN'+counter+'" name="PN" type="text" /></td>'+
             '<td><input name="Name" type="text" class="form-control text-box single-line" readonly/></td>'+
             '<td><input name="Spec" type="text" class="form-control text-box single-line" readonly/></td>'+

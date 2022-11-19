@@ -32,6 +32,7 @@
         <table id="itemTable" class="table">
             <thead>
                 <tr>
+                    <th></th>
                     <th>料號</th>
                     <th>名稱</th>
                     <th>規格</th>
@@ -39,15 +40,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model.PurchaseRequestItems)
-                {
-                    <tr>
-                        <td>@Html.EditorFor(model => item.PNId, new { htmlAttributes = new { @class = "form-control" } })</td>
-                        <td>@Html.EditorFor(model => item.Name, new { htmlAttributes = new { @class = "form-control" } })</td>
-                        <td>@Html.EditorFor(model => item.Spec, new { htmlAttributes = new { @class = "form-control" } })</td>
-                        <td>@Html.EditorFor(model => item.Qty, new { htmlAttributes = new { @class = "form-control" } })</td>
-                    </tr>
-                }
+                
             </tbody>
         </table>
         <p>
