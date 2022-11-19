@@ -35,4 +35,18 @@ public class PurchaseRequestController : Controller
         }
         return BadRequest("參數驗證失敗");
     }
+
+    public async Task<IActionResult> Details(string id)
+    {
+        if (string.IsNullOrEmpty(id))
+        {
+            return NotFound();
+        }
+        var purchaseRequest = await _service.GetPurchaseRequest(id);
+        if (purchaseRequest == null)
+        {
+            return NotFound();
+        }
+        return View(purchaseRequest);
+    }
 }

@@ -2,6 +2,7 @@ using WebMVC.ViewModels.PurchaseRequest.List;
 using WebMVC.ViewModels;
 using System.Text.Json;
 using WebMVC.ViewModels.PurchaseRequest.Create;
+using WebMVC.ViewModels.PurchaseRequest.Detail;
 namespace WebMVC.Services;
 public class PurchaseRequestService: IPurchaseRequestService
 {
@@ -44,5 +45,21 @@ public class PurchaseRequestService: IPurchaseRequestService
         var response = await _httpClient.PostAsync(uri,purchaseRequestContent);
         response.EnsureSuccessStatusCode();
         return true;
+    }
+
+    public async Task<DetailPurchaseRequestViewModel> GetPurchaseRequest(string id)
+    {
+        if ( string.IsNullOrEmpty(id)){
+            return new DetailPurchaseRequestViewModel();
+        }
+        var uri = _remoteServiceBaseUrl + "/"+id;
+        var response = await _httpClient.GetAsync(uri);
+        var responseString = await response.Content.ReadAsStringAsync();
+        var json = JsonSerializer.Deserialize<DetailPurchaseRequestViewModel>(responseString, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
+        return string.IsNullOrEmpty(responseString) || json ==null ?
+            new DetailPurchaseRequestViewModel() :json;
     }
 }

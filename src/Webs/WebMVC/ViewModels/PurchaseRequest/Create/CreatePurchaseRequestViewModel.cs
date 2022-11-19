@@ -15,9 +15,14 @@ public class CreatePurchaseRequestViewModel
 
 public class CreatePurchaseRequestItemViewModel
 {
+    [Required]
     public string PRId {set;get;} = string.Empty;
+    [Required]
     public string PNId{set;get;} = string.Empty;
+    [Required]
     public string Name{set;get;} = string.Empty;
+    [Required]
     public string Spec{set;get;} = string.Empty;
+    [Required]
     public int Qty{set;get;} = 1;
 }

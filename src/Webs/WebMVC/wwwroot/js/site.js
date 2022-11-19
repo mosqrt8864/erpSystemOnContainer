@@ -5,7 +5,6 @@
 var counter = 1;
 function getval(sel,index)
 {
-    console.log(sel.value);
     $.ajax({
         contentType: 'application/json; charset=utf-8',
         type: 'GET',
@@ -35,7 +34,7 @@ function getval(sel,index)
 $(function(){
     $('#addItem').click(function (){
         $('<tr id="row'+counter+'">'+
-            '<td><select onchange="getval(this,'+counter+');" class="form-select" id="PN" name="PN" type="text" /></td>'+
+            '<td><select onchange="getval(this,'+counter+');" class="form-select" id="PN'+counter+'" name="PN" type="text" /></td>'+
             '<td><input name="Name" type="text" class="form-control text-box single-line" readonly/></td>'+
             '<td><input name="Spec" type="text" class="form-control text-box single-line" readonly/></td>'+
             '<td><input name="Qty" type="text" class="form-control text-box single-line"/></td>'+
@@ -63,12 +62,12 @@ $(function(){
                               });
                          });
                     }
-                    $("[name='PN']").append($('<option/>', { 
+                    $('#PN'+counter).append($('<option/>', { 
                         value: value.id,
                         text : value.id 
                     }));
-                    counter++;
                 });
+                counter++;
             },
             error: function(){
                 alert('fail');
@@ -85,8 +84,6 @@ $(function(){
             $(this).find("td > input[type='text']").each (function(i,item) {
                 var propertyname = $(item).attr("name");
                 switch(propertyname){
-                    case "PN":
-                        properties.PNId = $(item).val();
                     case "Name":
                         properties.Name = $(item).val();
                     case "Spec":
@@ -95,6 +92,13 @@ $(function(){
                         properties.Qty = $(item).val();
                 }
               });
+            $(this).find("td > select[type='text']").each (function(i,item) {
+                var propertyname = $(item).attr("name");
+                switch(propertyname){
+                    case "PN":
+                        properties.PNId = $(item).val();
+                }
+            });
               items.push(properties);     
          });
         var purchaseRequest ={
