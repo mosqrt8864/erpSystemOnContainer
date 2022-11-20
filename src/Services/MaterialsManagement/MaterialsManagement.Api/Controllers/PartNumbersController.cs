@@ -22,10 +22,19 @@ public class PartNumbersController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<bool>> Create([FromBody]CreatePartNumberCommand createPartNumberCommand)
     {
-        _logger.LogInformation(
-                "----- Sending command: ({@Command})",
-                createPartNumberCommand);
-        return await _mediator.Send(createPartNumberCommand);
+        try
+        {
+            _logger.LogInformation(
+                    "----- Sending command: ({@Command})",
+                    createPartNumberCommand);
+            var result = await _mediator.Send(createPartNumberCommand);
+            return Ok(result);
+        }
+        catch(Exception ex)
+        {
+            _logger.LogError(ex.ToString());
+            return StatusCode(500, "Internal server error");
+        }
     }
 
     [HttpGet("{id}")]
