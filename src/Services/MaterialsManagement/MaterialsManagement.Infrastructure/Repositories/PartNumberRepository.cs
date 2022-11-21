@@ -20,7 +20,7 @@ public class PartNumberRepository : IPartNumberRepository
         return await _context.PartNumbers.FirstOrDefaultAsync(x=>x.Id == id);
     }
 
-    public async Task<List<PartNumber>> GetListAsync(int pageSize,int pageNumber)
+    public async Task<IEnumerable<PartNumber>> GetListAsync(int pageSize,int pageNumber)
     {
         return await _context.PartNumbers.AsNoTracking().Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
     }

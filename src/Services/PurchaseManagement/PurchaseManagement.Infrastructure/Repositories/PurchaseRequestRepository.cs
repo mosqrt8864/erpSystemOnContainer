@@ -24,7 +24,7 @@ public class PurchaseRequestRepository : IPurchaseRequestRepository
         return await _context.PurchaseRequests.Include(o => o.PurchaseRequestItems).FirstOrDefaultAsync(x=>x.Id == id);
     }
 
-    public async Task<List<PurchaseRequest>> GetListAsync(int pageSize,int pageNumber)
+    public async Task<IEnumerable<PurchaseRequest>> GetListAsync(int pageSize,int pageNumber)
     {
         return await _context.PurchaseRequests.AsNoTracking().Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
     }

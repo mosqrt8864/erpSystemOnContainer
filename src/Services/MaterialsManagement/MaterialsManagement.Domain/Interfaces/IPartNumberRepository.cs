@@ -6,7 +6,7 @@ public interface IPartNumberRepository
 {
     Task Add(PartNumber partNumber,CancellationToken cancellationToken);
     Task<PartNumber> GetAsync(string id);
-    Task<List<PartNumber>> GetListAsync(int pageSize,int pageNumber);
+    Task<IEnumerable<PartNumber>> GetListAsync(int pageSize,int pageNumber);
     Task<int> GetCountAsync();
     Task SaveChangesAsync(CancellationToken cancellationToken);
 }
