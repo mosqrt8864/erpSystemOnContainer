@@ -23,7 +23,30 @@ builder.Host.UseSerilog(logger);
 // Add services to the container.
 
 builder.Services.AddControllers();
-builder.Services.AddProblemDetails(
+builder.Services.AddProblemDetails(options =>
+        options.CustomizeProblemDetails = (context) =>
+        {
+            var partNumberErrorFeature = context.HttpContext.Features
+                                                       .Get<PartNumberErrorFeature>();
+            if (partNumberErrorFeature is not null)
+            {
+                (string Detail, string Type) details = partNumberErrorFeature.PartNumberError switch
+                {
+                    PartNumberErrorType.SameKeyError =>
+                    ("Id已存在於資料庫",
+                                          ""),
+                    PartNumberErrorType.NotExistKeyError =>
+                    ("Id不存在",
+                                          ""),
+                    _ => ("其他錯誤",
+                                          "")
+                };
+
+                context.ProblemDetails.Type = details.Type;
+                //context.ProblemDetails.Title = "輸入參數錯誤";
+                context.ProblemDetails.Detail = details.Detail;
+            }
+        }
     );
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
