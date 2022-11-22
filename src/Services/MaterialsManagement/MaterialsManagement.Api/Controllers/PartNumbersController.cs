@@ -5,6 +5,10 @@ using MaterialsManagement.Application.Commands.UpdatePartNumber;
 using MaterialsManagement.Application.Queries.GetPartNumber;
 using MaterialsManagement.Application.Queries.GetPartNumbers;
 using MaterialsManagement.Application.Models;
+using Microsoft.AspNetCore.Diagnostics;
+using MaterialsManagement.Api.Errors;
+using MaterialsManagement.Api.Response;
+using System.Net;
 namespace MaterialsManagement.Api.Controllers;
 
 [ApiController]
@@ -28,42 +32,106 @@ public class PartNumbersController : ControllerBase
                     "----- Sending command: ({@Command})",
                     createPartNumberCommand);
             var result = await _mediator.Send(createPartNumberCommand);
-            return Ok(result);
+            return Ok(new SuccessResponse(){
+                Status = HttpStatusCode.OK,
+                Data = result
+            });
         }
         catch(Exception ex)
         {
-            _logger.LogError(ex.ToString());
-            return StatusCode(500, "Internal server error");
+            switch (ex)
+            {
+                case System.ArgumentException:
+                    var errorType = new PartNumberErrorFeature()
+                    {
+                        PartNumberError = PartNumberErrorType.SameKeyError
+                    };
+                    HttpContext.Features.Set(errorType);
+                    _logger.LogError("ErrMsg: {@string} , StatusCode: {code}.",ex.Message.ToString(),409);
+                    return Conflict();
+                default:
+                    _logger.LogError("ErrMsg: {@string} , StatusCode: {code}.",ex.Message.ToString(),500);
+                    return StatusCode(500);
+            }
         }
     }
 
     [HttpGet("{id}")]
     public async Task<ActionResult<PartNumberDto>> Get(string id)
     {
-        if (string.IsNullOrEmpty(id)){
-            return BadRequest(); 
+        try
+        {
+            var result = await _mediator.Send(new GetPartNumberQuery { Id = id });
+            if(result==null)
+            {
+                var errorType = new PartNumberErrorFeature()
+                {
+                    PartNumberError = PartNumberErrorType.NotExistKeyError
+                };
+                HttpContext.Features.Set(errorType);
+                return BadRequest();
+            }
+            return result;
         }
-        var result = await _mediator.Send(new GetPartNumberQuery { Id = id });
-        return result;
+        catch(Exception ex)
+        {
+            _logger.LogError("ErrMsg: {@string} , StatusCode: {code}.",ex.Message.ToString(),500);
+            return StatusCode(500);
+        }
     }
 
     [HttpGet]
     public async Task<ActionResult<PaginatedList<PartNumbersDto>>>GetList([FromQuery] GetPartNumbersQuery query)
     {
-        _logger.LogInformation(
-                "----- Sending command: ({@Command})",
-                query);
-        var result = await _mediator.Send(query);
-        return result;
+        try
+        {
+            _logger.LogInformation(
+                    "----- Sending command: ({@Command})",
+                    query);
+            var result = await _mediator.Send(query);
+            return result;
+        }
+        catch(Exception ex)
+        {
+            _logger.LogError("ErrMsg: {@string} , StatusCode: {code}.",ex.Message.ToString(),500);
+            return StatusCode(500);
+        }
     }
 
     [HttpPatch("{id}")]
     public async Task<ActionResult<bool>> Update(string id,[FromBody]UpdatePartNumberCommand updatePartNumberCommand)
     {
-        updatePartNumberCommand.Id = id;
-        _logger.LogInformation(
-                "----- Sending command: ({@Command})",
-                updatePartNumberCommand);
-        return await _mediator.Send(updatePartNumberCommand);
+        try
+        {
+            updatePartNumberCommand.Id = id;
+            _logger.LogInformation(
+                    "----- Sending command: ({@Command})",
+                    updatePartNumberCommand);
+            return await _mediator.Send(updatePartNumberCommand);
+        }
+        catch(Exception ex)
+        {
+            _logger.LogError("ErrMsg: {@string} , StatusCode: {code}.",ex.Message.ToString(),500);
+            return StatusCode(500);
+        }
+    }
+
+    [Route("/error")]
+    public IActionResult HandleError() =>
+        Problem();
+    [Route("/error-development")]
+    public IActionResult HandleErrorDevelopment([FromServices] IHostEnvironment hostEnvironment)
+    {
+        if (!hostEnvironment.IsDevelopment())
+        {
+            return NotFound();
+        }
+
+        var exceptionHandlerFeature =
+            HttpContext.Features.Get<IExceptionHandlerFeature>()!;
+
+        return Problem(
+            detail: exceptionHandlerFeature.Error.StackTrace,
+            title: exceptionHandlerFeature.Error.Message);
     }
 }
