@@ -1,6 +1,8 @@
 using MaterialsManagement.Api.Infrastructure.AutofacModules;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Serilog;
+using Serilog.Events;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
@@ -10,11 +12,13 @@ builder.Host.ConfigureContainer<ContainerBuilder>(builder =>
     builder.RegisterModule(new InfrastructureModule());
 });
 
-builder.Services.AddLogging(logging =>
-{
-    logging.ClearProviders();
-    logging.AddConsole();
-});
+// Logger
+var logger = new LoggerConfiguration()
+  .ReadFrom.Configuration(builder.Configuration)
+  .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+  .WriteTo.Console()
+  .CreateLogger();
+builder.Host.UseSerilog(logger);
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -30,6 +34,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseSerilogRequestLogging();
 
 app.UseHttpsRedirection();
 
