@@ -48,12 +48,11 @@ http://localhost:5000/
 
 * Database
 * Domain Event的傳遞辦法
-* Logger
 * Id的設計：高併發的情況，又想要有能識別溝通的單號
 * 測試
 * SPA
 * Docker
-* Error Handle
+* Validation
 
 ## 參考
 
