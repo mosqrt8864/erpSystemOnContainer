@@ -23,33 +23,7 @@ builder.Host.UseSerilog(logger);
 // Add services to the container.
 
 builder.Services.AddControllers();
-builder.Services.AddProblemDetails(options =>
-        options.CustomizeProblemDetails = (context) =>
-        {
-            var partNumberErrorFeature = context.HttpContext.Features
-                                                       .Get<PartNumberErrorFeature>();
-            if (partNumberErrorFeature is not null)
-            {
-                (string Detail, string Type) details = partNumberErrorFeature.PartNumberError switch
-                {
-                    PartNumberErrorType.SameKeyError =>
-                    ("Id已存在於資料庫",
-                                          ""),
-                    PartNumberErrorType.EmptyKeyError =>
-                    ("Id不可為空白",
-                                          ""),
-                    PartNumberErrorType.NotExistKeyError =>
-                    ("Id不存在",
-                                          ""),
-                    _ => ("其他錯誤",
-                                          "")
-                };
-
-                context.ProblemDetails.Type = details.Type;
-                //context.ProblemDetails.Title = "輸入參數錯誤";
-                context.ProblemDetails.Detail = details.Detail;
-            }
-        }
+builder.Services.AddProblemDetails(
     );
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -57,16 +31,18 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+//app.UseExceptionHandler();
+app.UseStatusCodePages();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
   app.UseSwagger();
   app.UseSwaggerUI();
-  app.UseExceptionHandler("/error-development");
+  app.UseDeveloperExceptionPage();
 }
 else
 {
-  app.UseExceptionHandler("/error");
+  app.UseExceptionHandler();
 }
 
 app.UseSerilogRequestLogging();

@@ -7,7 +7,6 @@ using MaterialsManagement.Application.Queries.GetPartNumbers;
 using MaterialsManagement.Application.Models;
 using Microsoft.AspNetCore.Diagnostics;
 using MaterialsManagement.Api.Errors;
-using MaterialsManagement.Api.Response;
 using System.Net;
 namespace MaterialsManagement.Api.Controllers;
 
@@ -32,10 +31,7 @@ public class PartNumbersController : ControllerBase
                     "----- Sending command: ({@Command})",
                     createPartNumberCommand);
             var result = await _mediator.Send(createPartNumberCommand);
-            return Ok(new SuccessResponse(){
-                Status = HttpStatusCode.OK,
-                Data = result
-            });
+            return result;
         }
         catch(Exception ex)
         {
@@ -115,23 +111,5 @@ public class PartNumbersController : ControllerBase
             return StatusCode(500);
         }
     }
-
-    [Route("/error")]
-    public IActionResult HandleError() =>
-        Problem();
-    [Route("/error-development")]
-    public IActionResult HandleErrorDevelopment([FromServices] IHostEnvironment hostEnvironment)
-    {
-        if (!hostEnvironment.IsDevelopment())
-        {
-            return NotFound();
-        }
-
-        var exceptionHandlerFeature =
-            HttpContext.Features.Get<IExceptionHandlerFeature>()!;
-
-        return Problem(
-            detail: exceptionHandlerFeature.Error.StackTrace,
-            title: exceptionHandlerFeature.Error.Message);
-    }
+    
 }
