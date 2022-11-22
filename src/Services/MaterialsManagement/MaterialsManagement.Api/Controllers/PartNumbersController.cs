@@ -40,7 +40,7 @@ public class PartNumbersController : ControllerBase
                 case System.ArgumentException:
                     var errorType = new PartNumberErrorFeature()
                     {
-                        PartNumberError = PartNumberErrorType.SameKeyError
+                        PartNumberError = PartNumberErrorType.CreateExistKeyError
                     };
                     HttpContext.Features.Set(errorType);
                     _logger.LogError("ErrMsg: {@string} , StatusCode: {code}.",ex.Message.ToString(),409);
@@ -62,7 +62,7 @@ public class PartNumbersController : ControllerBase
             {
                 var errorType = new PartNumberErrorFeature()
                 {
-                    PartNumberError = PartNumberErrorType.NotExistKeyError
+                    PartNumberError = PartNumberErrorType.GetNotExistKeyError
                 };
                 HttpContext.Features.Set(errorType);
                 return BadRequest();

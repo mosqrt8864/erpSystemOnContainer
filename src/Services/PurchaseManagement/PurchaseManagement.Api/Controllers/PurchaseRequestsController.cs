@@ -6,6 +6,7 @@ using PurchaseManagement.Application.Models;
 using PurchaseManagement.Application.Queries.GetPurchaseRequests;
 using PurchaseManagement.Application.Commands.UpdatePurchaseRequest;
 using PurchaseManagement.Application.Commands.DeletePurchaseRequest;
+using PurchaseManagement.Api.Errors;
 namespace PurchaseManagement.Api.Controllers;
 
 [ApiController]
@@ -23,42 +24,106 @@ public class PurchaseRequestsController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<bool>> Create([FromBody]CreatePurchaseRequestCommand createPurchaseRequestCommand)
     {
-        _logger.LogInformation(
+
+        try 
+        {
+            _logger.LogInformation(
                 "----- Sending command: ({@Command})",
                 createPurchaseRequestCommand);
-        return await _mediator.Send(createPurchaseRequestCommand);
+            var result = await _mediator.Send(createPurchaseRequestCommand);
+            return Ok(result);
+        }
+        catch(Exception ex)
+        {
+            switch (ex)
+            {
+                case System.ArgumentException:
+                    var errorType = new PurchaseRequestErrorFeature(){
+                        PurchaseRequestError = PurchaseRequestErrorType.CreateExistKeyError
+                    }; 
+                    HttpContext.Features.Set(errorType);
+                    _logger.LogError("ErrMsg: {@string} , StatusCode: {code}.",ex.Message.ToString(),409);
+                    return Conflict();
+                default :
+                    _logger.LogError("ErrMsg: {@string} , StatusCode: {code}",ex.Message.ToString(),500);
+                    return StatusCode(500);
+            }
+            
+        }
+        
     }
     [HttpGet("{id}")]
     public async Task<ActionResult<PurchaseRequestDto>> Get(string id)
     {
-        if (string.IsNullOrEmpty(id))
+        try
         {
-            return NotFound();
+            var result = await _mediator.Send(new GetPurchaseRequestQuery(){Id = id});
+            if (result ==null)
+            {
+                var errorType = new PurchaseRequestErrorFeature()
+                {
+                    PurchaseRequestError= PurchaseRequestErrorType.GetNotExistKeyError
+                };
+                HttpContext.Features.Set(errorType);
+                return BadRequest();
+            }
+            return Ok(result);
         }
-        return await _mediator.Send(new GetPurchaseRequestQuery(){Id = id});
+        catch(Exception ex)
+        {
+            _logger.LogError("ErrMsg: {@string} , StatusCode: {code}",ex.Message.ToString(),500);
+            return StatusCode(500);
+        }
     }
 
     [HttpGet]
     public async Task<ActionResult<PaginatedList<PurchaseRequestsDto>>> GetListAsync([FromQuery] GetPurchaseRequestsQuery query)
     {
-        _logger.LogInformation(
+        try
+        {
+            _logger.LogInformation(
                 "----- Sending command: ({@Command})",
                 query);
-        var result = await _mediator.Send(query);
-        return result;
+            var result = await _mediator.Send(query);
+            return Ok(result);
+        }
+        catch(Exception ex)
+        {
+            _logger.LogError("ErrMsg: {@string} , StatusCode: {code}",ex.Message.ToString(),500);
+            return StatusCode(500);
+        }
+        
     }
     [HttpPatch("{id}")]
     public async Task<ActionResult<bool>> Update(string id ,[FromBody] UpdatePurchaseRequestCommand command)
     {
-        command.Id = id;
-        _logger.LogInformation(
-                "----- Sending command: ({@Command})",
-                command);
-        return await _mediator.Send(command);
+        try
+        {
+            command.Id = id;
+            _logger.LogInformation(
+                    "----- Sending command: ({@Command})",
+                    command);
+            var result = await _mediator.Send(command);
+            return Ok(result);
+        }
+        catch(Exception ex)
+        {
+            _logger.LogError("ErrMsg: {@string} , StatusCode: {code}",ex.Message.ToString(),500);
+            return StatusCode(500);
+        }
     }
     [HttpDelete("{id}")]
     public async Task<ActionResult<bool>> Delete(string id)
     {
-        return await _mediator.Send(new DeletePurchaseRequestCommand(){Id = id});
+        try
+        {
+            var result = await _mediator.Send(new DeletePurchaseRequestCommand(){Id = id});
+            return Ok(result);
+        }
+        catch(Exception ex)
+        {
+            _logger.LogError("ErrMsg: {@string} , StatusCode: {code}",ex.Message.ToString(),500);
+            return StatusCode(500);
+        }
     }
 }

@@ -15,6 +15,15 @@ public class PurchaseRequestItemsController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<ActionResult<bool>> Delete(int id)
     {
-        return await _mediator.Send(new DeletePurchaseRequestItemCommand(){Id = id});
+        try
+        {
+            var result = await _mediator.Send(new DeletePurchaseRequestItemCommand(){Id = id});
+            return Ok(result);
+        }
+        catch(Exception ex)
+        {
+            _logger.LogError("ErrMsg: {@string} , StatusCode: {code}",ex.Message.ToString(),500);
+            return StatusCode(500);
+        }
     }
 }

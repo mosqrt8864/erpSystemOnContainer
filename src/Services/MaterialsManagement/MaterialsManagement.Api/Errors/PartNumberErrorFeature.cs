@@ -6,6 +6,6 @@ class PartNumberErrorFeature
 
 enum PartNumberErrorType
 {
-    SameKeyError,
-    NotExistKeyError
+    CreateExistKeyError,
+    GetNotExistKeyError
 }

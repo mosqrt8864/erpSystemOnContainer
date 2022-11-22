@@ -32,10 +32,10 @@ builder.Services.AddProblemDetails(options =>
             {
                 (string Detail, string Type) details = partNumberErrorFeature.PartNumberError switch
                 {
-                    PartNumberErrorType.SameKeyError =>
+                    PartNumberErrorType.CreateExistKeyError =>
                     ("Id已存在於資料庫",
                                           ""),
-                    PartNumberErrorType.NotExistKeyError =>
+                    PartNumberErrorType.GetNotExistKeyError =>
                     ("Id不存在",
                                           ""),
                     _ => ("其他錯誤",
@@ -55,7 +55,6 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 //app.UseExceptionHandler();
-app.UseStatusCodePages();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -67,6 +66,8 @@ else
 {
   app.UseExceptionHandler();
 }
+
+app.UseStatusCodePages();
 
 app.UseSerilogRequestLogging();
 
